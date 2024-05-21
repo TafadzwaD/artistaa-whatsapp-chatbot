@@ -48,7 +48,11 @@ export class WhatsappController {
       case 'text':
         const text = message.text.body;
 
-        await this.whatsAppService.sendWhatsAppMessage(messageSender, text);
+        await this.whatsAppService.sendWhatsAppMessage(
+          messageSender,
+          text,
+          messageID,
+        );
         break;
     }
 

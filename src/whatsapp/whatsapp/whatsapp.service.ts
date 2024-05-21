@@ -10,7 +10,11 @@ export class WhatsappService {
   private readonly httpService = new HttpService();
   private readonly logger = new Logger(WhatsappService.name);
 
-  async sendWhatsAppMessage(messageSender: string, userInput: string) {
+  async sendWhatsAppMessage(
+    messageSender: string,
+    userInput: string,
+    messageID: string,
+  ) {
     const aiResponse = await this.openaiService.generateAIResponse(
       messageSender,
       userInput,
@@ -27,6 +31,9 @@ export class WhatsappService {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to: messageSender,
+      context: {
+        message_id: messageID,
+      },
       type: 'text',
       text: {
         preview_url: false,
