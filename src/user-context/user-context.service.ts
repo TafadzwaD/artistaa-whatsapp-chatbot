@@ -7,6 +7,7 @@ export class UserContextService {
   private readonly redis: Redis = new Redis(process.env.REDIS_URL || '');
   private readonly logger: Logger = new Logger(UserContextService.name);
   private readonly salt = process.env.HASHING_SALT;
+  private readonly contextExpirationTime = 10800; // Expiration Time In Seconds
 
   // Phone Numbers shouldn't be said as plain text values
   // in the DB
@@ -30,6 +31,7 @@ export class UserContextService {
       });
       const hashedUserID = this.hashPhoneNumber(userID);
       await this.redis.rpush(hashedUserID, value);
+      await this.redis.expire(hashedUserID, this.contextExpirationTime);
 
       return 'Context Saved!';
     } catch (error) {
@@ -56,6 +58,8 @@ export class UserContextService {
 
       pipeline.lrange(hashedUserID, 0, -1);
 
+      pipeline.expire(hashedUserID, this.contextExpirationTime);
+
       // Execute both operations in a single round-trip
 
       const results = await pipeline.exec();
@@ -72,6 +76,8 @@ export class UserContextService {
     try {
       const hashedUserID = this.hashPhoneNumber(userID);
       const conversation = await this.redis.lrange(hashedUserID, 0, -1);
+
+      await this.redis.expire(hashedUserID, this.contextExpirationTime);
 
       return conversation.map((item) => JSON.parse(item));
     } catch (error) {
