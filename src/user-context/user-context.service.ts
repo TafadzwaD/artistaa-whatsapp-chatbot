@@ -1,10 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Redis } from 'ioredis';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class UserContextService {
   private readonly redis: Redis = new Redis(process.env.REDIS_URL || '');
   private readonly logger: Logger = new Logger(UserContextService.name);
+  private readonly salt = process.env.HASHING_SALT;
+
+  // Phone Numbers shouldn't be said as plain text values
+  // in the DB
+  hashPhoneNumber(phoneNumber: string) {
+    const hashedPhoneNumber = crypto
+      .createHmac('sha256', this.salt)
+      .update(phoneNumber)
+      .digest('hex');
+    return hashedPhoneNumber;
+  }
 
   async saveToContext(
     context: string,
@@ -16,7 +28,8 @@ export class UserContextService {
         role: contextType,
         content: context,
       });
-      await this.redis.rpush(userID, value);
+      const hashedUserID = this.hashPhoneNumber(userID);
+      await this.redis.rpush(hashedUserID, value);
 
       return 'Context Saved!';
     } catch (error) {
@@ -36,10 +49,12 @@ export class UserContextService {
         role: contextType,
         content: context,
       });
-      // Add context saving to pipeline
-      pipeline.rpush(userID, value);
+      const hashedUserID = this.hashPhoneNumber(userID);
 
-      pipeline.lrange(userID, 0, -1);
+      // Add context saving to pipeline
+      pipeline.rpush(hashedUserID, value);
+
+      pipeline.lrange(hashedUserID, 0, -1);
 
       // Execute both operations in a single round-trip
 
@@ -55,7 +70,8 @@ export class UserContextService {
 
   async getConversationHistory(userID: string) {
     try {
-      const conversation = await this.redis.lrange(userID, 0, -1);
+      const hashedUserID = this.hashPhoneNumber(userID);
+      const conversation = await this.redis.lrange(hashedUserID, 0, -1);
 
       return conversation.map((item) => JSON.parse(item));
     } catch (error) {
