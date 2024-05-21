@@ -8,7 +8,7 @@ export class UserContextService {
 
   async saveToContext(
     context: string,
-    contextType: 'user' | 'system',
+    contextType: 'user' | 'assistant',
     userID: string,
   ) {
     try {
@@ -27,7 +27,7 @@ export class UserContextService {
 
   async saveAndFetchContext(
     context: string,
-    contextType: 'user' | 'system',
+    contextType: 'user' | 'assistant',
     userID: string,
   ) {
     try {
@@ -49,7 +49,7 @@ export class UserContextService {
       return conversationContext.map((item) => JSON.parse(item));
     } catch (error) {
       this.logger.error('Error Saving Context And Retrieving', error);
-      return 'Error Saving And Retrieving Context';
+      return [];
     }
   }
 
