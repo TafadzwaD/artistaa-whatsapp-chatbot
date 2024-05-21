@@ -25,6 +25,34 @@ export class UserContextService {
     }
   }
 
+  async saveAndFetchContext(
+    context: string,
+    contextType: 'user' | 'system',
+    userID: string,
+  ) {
+    try {
+      const pipeline = this.redis.pipeline();
+      const value = JSON.stringify({
+        role: contextType,
+        content: context,
+      });
+      // Add context saving to pipeline
+      pipeline.rpush(userID, value);
+
+      pipeline.lrange(userID, 0, -1);
+
+      // Execute both operations in a single round-trip
+
+      const results = await pipeline.exec();
+      const conversationContext = results[1][1] as string[];
+
+      return conversationContext.map((item) => JSON.parse(item));
+    } catch (error) {
+      this.logger.error('Error Saving Context And Retrieving', error);
+      return 'Error Saving And Retrieving Context';
+    }
+  }
+
   async getConversationHistory(userID: string) {
     try {
       const conversation = await this.redis.lrange(userID, 0, -1);
