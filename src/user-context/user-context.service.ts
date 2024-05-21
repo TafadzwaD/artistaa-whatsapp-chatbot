@@ -13,8 +13,8 @@ export class UserContextService {
   ) {
     try {
       const value = JSON.stringify({
-        type: contextType,
-        data: { content: context },
+        role: contextType,
+        content: context,
       });
       await this.redis.rpush(userID, value);
 
@@ -28,11 +28,8 @@ export class UserContextService {
   async getConversationHistory(userID: string) {
     try {
       const conversation = await this.redis.lrange(userID, 0, -1);
-      const jsonList = conversation.map((jsonString: string) => {
-        JSON.parse(jsonString);
-      });
 
-      return jsonList;
+      return conversation.map((item) => JSON.parse(item));
     } catch (error) {
       this.logger.error(error);
       return [];
