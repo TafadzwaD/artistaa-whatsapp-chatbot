@@ -15,7 +15,7 @@ export class OpenaiService {
         model: process.env.OPENAI_MODEL || 'gpt-4o-2024-05-13',
       });
 
-      return response;
+      return response.choices[0].message.content;
     } catch (error) {
       this.logger.error('Error generating AI response', error);
       // Fail gracefully!!

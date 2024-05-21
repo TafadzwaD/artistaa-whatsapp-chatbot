@@ -1,13 +1,18 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { OpenaiService } from 'src/openai/openai.service';
 
 @Injectable()
 export class WhatsappService {
+  constructor(private readonly openaiService: OpenaiService) {}
+
   private readonly httpService = new HttpService();
   private readonly logger = new Logger(WhatsappService.name);
 
-  async sendWhatsAppMessage(messageSender: string) {
+  async sendWhatsAppMessage(messageSender: string, userInput: string) {
+    const aiResponse = await this.openaiService.generateAIResponse(userInput);
+
     const url = `https://graph.facebook.com/${process.env.WHATSAPP_CLOUD_API_VERSION}/${process.env.WHATSAPP_CLOUD_API_PHONE_NUMBER_ID}/messages`;
     const config = {
       headers: {
@@ -22,7 +27,7 @@ export class WhatsappService {
       type: 'text',
       text: {
         preview_url: false,
-        body: 'Response Message From Our Bot!!!',
+        body: aiResponse,
       },
     });
 
