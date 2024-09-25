@@ -46,7 +46,7 @@ export class WhatsappController {
       case 'text':
         const text = message.text.body;
         const imageGenerationCommand = '/imagine';
-        if (text.toLowerCase().includes('/imagine')) {
+        if (text.toLowerCase().includes(imageGenerationCommand)) {
           const response = await this.stabilityaiService.textToImage(
             text.replaceAll(imageGenerationCommand, ''),
           );
