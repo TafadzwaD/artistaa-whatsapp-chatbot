@@ -1,20 +1,16 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 
 import * as process from 'node:process';
 import { WhatsappService } from './whatsapp.service';
+import { StabilityaiService } from 'src/stabilityai/stabilityai.service';
 
 @Controller('whatsapp')
 export class WhatsappController {
-  constructor(private readonly whatsAppService: WhatsappService) {}
+  constructor(
+    private readonly whatsAppService: WhatsappService,
+    private readonly stabilityaiService: StabilityaiService,
+  ) {}
 
   @Get('webhook')
   whatsappVerificationChallenge(@Req() request: Request) {
@@ -49,6 +45,21 @@ export class WhatsappController {
     switch (message.type) {
       case 'text':
         const text = message.text.body;
+        const imageGenerationCommand = '/imagine';
+        if (text.toLowerCase().includes('/imagine')) {
+          const response = await this.stabilityaiService.textToImage(
+            text.replaceAll(imageGenerationCommand, ''),
+          );
+
+          if (Array.isArray(response)) {
+            await this.whatsAppService.sendImageByUrl(
+              messageSender,
+              response[0],
+              messageID,
+            );
+          }
+          return;
+        }
 
         await this.whatsAppService.sendWhatsAppMessage(
           messageSender,
