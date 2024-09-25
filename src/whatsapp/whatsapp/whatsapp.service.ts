@@ -86,7 +86,7 @@ export class WhatsappService {
     });
 
     try {
-      this.httpService
+      const response = this.httpService
         .post(this.url, data, this.config)
         .pipe(
           map((res) => {
@@ -102,7 +102,9 @@ export class WhatsappService {
           }),
         );
 
-      return 'Image sent successfully';
+      const messageSendingStatus = await lastValueFrom(response);
+
+      return `Image sent successfully, response: ${messageSendingStatus}`;
     } catch (error) {
       this.logger.error(error);
       return 'Axle broke!! Error Sending Image!!';
