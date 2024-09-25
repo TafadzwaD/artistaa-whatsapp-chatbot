@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import * as process from 'node:process';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import * as fs from 'fs';
 import { join } from 'path';
