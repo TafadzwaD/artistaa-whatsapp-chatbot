@@ -7,8 +7,7 @@ import { join } from 'path';
 
 @Injectable()
 export class StabilityaiService {
-  constructor(private httpService: HttpService) {}
-
+  private readonly httpService = new HttpService();
   private readonly logger = new Logger(StabilityaiService.name);
 
   readonly configuration = {
