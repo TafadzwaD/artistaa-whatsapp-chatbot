@@ -66,6 +66,51 @@ export class WhatsappService {
     }
   }
 
+  async sendImageByUrl(
+    messageSender: string,
+    fileName: string,
+    messageID: string,
+  ) {
+    const imageUrl = `${process.env.SERVER_URL}/${fileName}`;
+    const data = JSON.stringify({
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: messageSender,
+      context: {
+        message_id: messageID,
+      },
+      type: 'image',
+      image: {
+        link: imageUrl,
+      },
+    });
+
+    try {
+      const response = this.httpService
+        .post(this.url, data, this.config)
+        .pipe(
+          map((res) => {
+            return res.data;
+          }),
+        )
+        .pipe(
+          catchError((error) => {
+            this.logger.error(error);
+            throw new BadRequestException(
+              'Error Posting To WhatsApp Cloud API',
+            );
+          }),
+        );
+
+      const messageSendingStatus = await lastValueFrom(response);
+
+      return `Image sent successfully, response: ${messageSendingStatus}`;
+    } catch (error) {
+      this.logger.error(error);
+      return 'Axle broke!! Error Sending Image!!';
+    }
+  }
+
   async markMessageAsRead(messageID: string) {
     const data = JSON.stringify({
       messaging_product: 'whatsapp',

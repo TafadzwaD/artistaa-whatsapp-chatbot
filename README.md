@@ -6,12 +6,16 @@
 ## Step-by-Step Guide
 For a detailed, step-by-step guide on building this chatbot, check out:
 
-[<img width="960" alt="WhatsApp AI Chatbot" src="https://github.com/user-attachments/assets/ed05d93e-613a-41db-8514-b12d722fe246">](https://youtu.be/Nn9JJ8IdxM8)
-## NestJS WhatsApp Chatbot with GPT-4o
+### NestJS WhatsApp Chatbot with GPT-4o
+[<img width="960" alt="WhatsApp AI Chatbot" src="https://github.com/user-attachments/assets/ed05d93e-613a-41db-8514-b12d722fe246">](https://www.youtube.com/watch?v=Nn9JJ8IdxM8&list=PLX8Kj-tc4dHallx-LJ-5uu894S7f52xIC&index=1)
+
+### Text-to-image generation with Stable Diffusion model
+[<img width="960" alt="WhatsApp AI Chatbot" src="https://github.com/user-attachments/assets/ed05d93e-613a-41db-8514-b12d722fe246">](https://www.youtube.com/watch?v=gxmlZgVjnv8&list=PLX8Kj-tc4dHallx-LJ-5uu894S7f52xIC&index=4)
 
 **Key Features:**
 
-* **GPT-4o Integration:** Utilizes the advanced capabilities of GPT-4o for natural language understanding and generation, ensuring engaging and intelligent conversations.
+* **GPT-4o Integration:** Utilises the advanced capabilities of GPT-4o for natural language understanding and generation, ensuring engaging and intelligent conversations.
+* **Text-to-image Generation:** Utilises Stability AI's `Stable Diffusion` model for text-to-image generation.
 * **Redis for Context:** Stores conversation context in Redis, enabling the chatbot to maintain a cohesive dialogue and provide context-aware responses.
 * **NestJS Framework:** Built on the robust and scalable NestJS framework, providing a well-structured and maintainable codebase.
 * **Production-Ready:** Designed with production environments in mind, ensuring security, stability, scalability, and reliability.
