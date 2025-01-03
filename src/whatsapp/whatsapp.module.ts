@@ -4,6 +4,7 @@ import { WhatsappService } from './whatsapp/whatsapp.service';
 import { OpenaiService } from 'src/openai/openai.service';
 import { UserContextService } from '../user-context/user-context.service';
 import { StabilityaiService } from '../stabilityai/stabilityai.service';
+import { AudioService } from '../audio/audio.service';
 
 @Module({
   controllers: [WhatsappController],
@@ -12,6 +13,7 @@ import { StabilityaiService } from '../stabilityai/stabilityai.service';
     WhatsappService,
     UserContextService,
     StabilityaiService,
+    AudioService,
   ],
 })
 export class WhatsappModule {}

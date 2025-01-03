@@ -3,13 +3,17 @@ import { Request } from 'express';
 
 import * as process from 'node:process';
 import { WhatsappService } from './whatsapp.service';
+import { AudioService } from 'src/audio/audio.service';
 import { StabilityaiService } from 'src/stabilityai/stabilityai.service';
+import { OpenaiService } from 'src/openai/openai.service';
 
 @Controller('whatsapp')
 export class WhatsappController {
   constructor(
     private readonly whatsAppService: WhatsappService,
     private readonly stabilityaiService: StabilityaiService,
+    private readonly audioService: AudioService,
+    private readonly openaiService: OpenaiService,
   ) {}
 
   @Get('webhook')
@@ -67,6 +71,37 @@ export class WhatsappController {
           messageID,
         );
         break;
+      case 'audio':
+        const audioID = message.audio.id;
+        const response = await this.whatsAppService.downloadMedia(audioID);
+        if (response.status === 'error') {
+          return;
+        }
+
+        const transcribedSpeech = await this.audioService.convertAudioToText(
+          response.data,
+        );
+
+        if (transcribedSpeech.status === 'error') {
+          return;
+        }
+
+        const aiResponse = await this.openaiService.generateAIResponse(
+          messageSender,
+          transcribedSpeech.data,
+        );
+
+        const textToSpeech =
+          await this.audioService.convertTextToSpeech(aiResponse);
+
+        if (textToSpeech.status === 'error') {
+          return;
+        }
+
+        await this.whatsAppService.sendAudioByUrl(
+          messageSender,
+          textToSpeech.data,
+        );
     }
 
     return 'Message processed';
