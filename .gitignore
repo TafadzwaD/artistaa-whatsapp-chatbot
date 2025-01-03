@@ -57,3 +57,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # text-to-image files
 generatedImages/
+audioFiles/
