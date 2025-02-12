@@ -8,6 +8,7 @@ export class OpenaiService {
 
   private readonly openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
+    baseURL: 'http://localhost:11434/v1',
   });
   private readonly logger = new Logger(OpenaiService.name);
 
@@ -46,14 +47,23 @@ export class OpenaiService {
 
       const response = await this.openai.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, ...userContext],
-        model: process.env.OPENAI_MODEL || 'gpt-4o-2024-05-13',
+        model: 'deepseek-r1',
       });
 
       const aiResponse = response.choices[0].message.content;
 
-      await this.context.saveToContext(aiResponse, 'assistant', userID);
+      const formattedText = aiResponse.replace(
+        /<think>[\s\S]*?<\/think>\s*/g,
+        '',
+      );
 
-      return aiResponse;
+      await this.context.saveToContext(
+        formattedText.trim(),
+        'assistant',
+        userID,
+      );
+
+      return formattedText.trim();
     } catch (error) {
       this.logger.error('Error generating AI response', error);
       // Fail gracefully!!
