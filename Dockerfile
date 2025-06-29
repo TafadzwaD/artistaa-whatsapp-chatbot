@@ -56,6 +56,9 @@ ENV NODE_ENV production
 # Run the application as a non-root user.
 USER node
 
+# Give write permission to node user for image generation
+RUN chown -R node:node /usr/src/app
+
 # Copy package.json so that package manager commands can be used.
 COPY package.json .
 
