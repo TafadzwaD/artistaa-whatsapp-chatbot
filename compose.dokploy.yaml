@@ -26,7 +26,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.nestjs-backend.rule=Host(`${TRAEFIK_HOST}`)
-      - traefik.http.routers.nestjs-backend.entrypoints=web
+      - traefik.http.routers.nestjs-backend.entrypoints=websecure
       - traefik.http.services.nestjs-backend.loadbalancer.server.port=3000
 
   redis:
