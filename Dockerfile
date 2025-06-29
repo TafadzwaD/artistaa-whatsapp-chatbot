@@ -50,14 +50,15 @@ RUN npm run build
 # where the necessary files are copied from the build stage.
 FROM base as final
 
+# Give write permission to node user for image generation
+RUN chown -R node:node /usr/src/app
+
 # Use production node environment by default.
 ENV NODE_ENV production
 
 # Run the application as a non-root user.
 USER node
 
-# Give write permission to node user for image generation
-RUN chown -R node:node /usr/src/app
 
 # Copy package.json so that package manager commands can be used.
 COPY package.json .
