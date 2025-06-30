@@ -54,7 +54,7 @@ FROM base AS final
 RUN chown -R node:node /usr/src/app
 
 # Use production node environment by default.
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Run the application as a non-root user.
 USER node
