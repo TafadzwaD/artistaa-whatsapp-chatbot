@@ -7,6 +7,7 @@ import { OpenaiModule } from './openai/openai.module';
 import { UserContextModule } from './user-context/user-context.module';
 import { StabilityaiModule } from './stabilityai/stabilityai.module';
 import { AudioModule } from './audio/audio.module';
+import { RedisProvider } from './redis/redis.provider';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { AudioModule } from './audio/audio.module';
     AudioModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RedisProvider],
 })
 export class AppModule {}
