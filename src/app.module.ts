@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
 import { ConfigModule } from '@nestjs/config';
 import { OpenaiModule } from './openai/openai.module';
 import { UserContextModule } from './user-context/user-context.module';
 import { StabilityaiModule } from './stabilityai/stabilityai.module';
 import { AudioModule } from './audio/audio.module';
-import { RedisProvider } from './redis/redis.provider';
 
 @Module({
   imports: [
@@ -18,7 +15,5 @@ import { RedisProvider } from './redis/redis.provider';
     StabilityaiModule,
     AudioModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, RedisProvider],
 })
 export class AppModule {}
