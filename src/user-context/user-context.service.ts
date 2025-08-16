@@ -64,9 +64,13 @@ export class UserContextService {
         .expire(hashedUserID, this.contextExpirationTime)
         .exec(); // We're executing both operations in a single round-trip
 
-      const conversationContext = results[1][1] as string[];
+      const lRangeResult = results[1];
+      if (Array.isArray(lRangeResult)) {
+        const conversationContext = lRangeResult as string[];
+        return conversationContext.map((item) => JSON.parse(item));
+      }
 
-      return conversationContext.map((item) => JSON.parse(item));
+      return [];
     } catch (error) {
       this.logger.error('Error Saving Context And Retrieving', error);
       return [];
