@@ -17,11 +17,10 @@ export class UserContextService {
   // Phone Numbers shouldn't be said as plain text values
   // in the DB
   hashPhoneNumber(phoneNumber: string) {
-    const hashedPhoneNumber = crypto
+    return crypto
       .createHmac('sha256', this.salt)
       .update(phoneNumber)
       .digest('hex');
-    return hashedPhoneNumber;
   }
 
   async saveToContext(
