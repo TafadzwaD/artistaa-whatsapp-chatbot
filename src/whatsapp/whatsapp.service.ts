@@ -204,12 +204,18 @@ export class WhatsappService {
       return 'Axle broke!! Error Sending Audio!!';
     }
   }
-  async markMessageAsRead(messageID: string) {
-    const data = JSON.stringify({
+  async markMessageAsRead(messageID: string, showingTypingIndicator = false) {
+    const payload: any = {
       messaging_product: 'whatsapp',
       status: 'read',
       message_id: messageID,
-    });
+    };
+
+    if (showingTypingIndicator) {
+      payload.typing_indicator = { type: 'text' };
+    }
+
+    const data = JSON.stringify(payload);
 
     try {
       const response = this.httpService

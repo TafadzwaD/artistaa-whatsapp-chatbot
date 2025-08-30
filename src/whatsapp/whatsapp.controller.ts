@@ -44,7 +44,7 @@ export class WhatsappController {
     const messageSender = message.from;
     const messageID = message.id;
 
-    await this.whatsAppService.markMessageAsRead(messageID);
+    await this.whatsAppService.markMessageAsRead(messageID, true);
 
     switch (message.type) {
       case 'text':
